@@ -23,7 +23,7 @@ const Header = () => {
             <li className='hidden sm:inline text-slate-700 hover:underline font-bold'>About</li>
           </Link>
           <Link>
-            <li className='text-slate-700 hover:underline font-bold'>Sign In</li>
+            <li className='text-slate-700 hover:underline font-bold'>로그인</li>
           </Link>
         </ul>
       </div>
