@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
+import jwt from 'jsonwebtoken';
 
 export const signUp = async (req, res, next) => {
     try {
@@ -10,7 +11,22 @@ export const signUp = async (req, res, next) => {
         await newUser.save();
         res.status(201).json("유저 생성 성공!");
     } catch (error) {
+        // next(error);
         next(errorHandler(550, error.message + '///유저 생성 실패! 데이터를 확인해주세요.'));
-        // res.tatus(500).json(error.message);
+    }
+}
+
+
+export const signIn = async (req, res, next) => {
+    const {email, password} = req.body;
+    try {
+        const validUser = await User.findOne({email});
+        if(!validUser) return next(errorHandler(404, '가입된 이메일이 없습니다.'));
+        const validPassword = bcryptjs.compareSync(password, validUser.password);
+        if(!validPassword) return next(errorHandler(401, '비밀번호를 잘못 입력하셨습니다.'));
+
+        const token = jwt.sign({})
+    } catch (error) {
+        next(error);
     }
 }
