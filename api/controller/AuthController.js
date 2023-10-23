@@ -25,7 +25,9 @@ export const signIn = async (req, res, next) => {
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if(!validPassword) return next(errorHandler(401, '비밀번호를 잘못 입력하셨습니다.'));
 
-        const token = jwt.sign({})
+        const token = jwt.sign({ id : validUser._id }, process.env.JWT_SECRET)    //_id로 unique 한 토큰값 지정
+        res.cookie('access_token', token, { httpOnly : true } ).status(200).json(validUser);
+
     } catch (error) {
         next(error);
     }
