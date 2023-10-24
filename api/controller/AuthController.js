@@ -23,10 +23,15 @@ export const signIn = async (req, res, next) => {
         const validUser = await User.findOne({email});
         if(!validUser) return next(errorHandler(404, '가입된 이메일이 없습니다.'));
         const validPassword = bcryptjs.compareSync(password, validUser.password);
+        console.log(validUser._id);
         if(!validPassword) return next(errorHandler(401, '비밀번호를 잘못 입력하셨습니다.'));
 
         const token = jwt.sign({ id : validUser._id }, process.env.JWT_SECRET)    //_id로 unique 한 토큰값 지정
-        res.cookie('access_token', token, { httpOnly : true } ).status(200).json(validUser);
+
+        //그냥 validUser로 보내버리면 비밀번호가 보여지게 됨
+        // res.cookie('access_token', token, { httpOnly : true } ).status(200).json(validUser);
+        const {password : pass, ...rest} = validUser._doc;  //
+        res.cookie('access_token', token, { httpOnly : true } ).status(200).json(rest);
 
     } catch (error) {
         next(error);
