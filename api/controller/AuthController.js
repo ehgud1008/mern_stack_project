@@ -23,7 +23,6 @@ export const signIn = async (req, res, next) => {
         const validUser = await User.findOne({email});
         if(!validUser) return next(errorHandler(404, '가입된 이메일이 없습니다.'));
         const validPassword = bcryptjs.compareSync(password, validUser.password);
-        console.log(validUser._id);
         if(!validPassword) return next(errorHandler(401, '비밀번호를 잘못 입력하셨습니다.'));
 
         const token = jwt.sign({ id : validUser._id }, process.env.JWT_SECRET)    //_id로 unique 한 토큰값 지정
