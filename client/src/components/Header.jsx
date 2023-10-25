@@ -16,13 +16,13 @@ const Header = () => {
           <FaSearch className="text-slate-600"/>
         </form>
         <ul className='flex gap-4'>
-          <Link>
+          <Link to={"/"}>
             <li className='hidden sm:inline text-slate-700 hover:underline font-bold'>Home</li>
           </Link>
           <Link>
             <li className='hidden sm:inline text-slate-700 hover:underline font-bold'>About</li>
           </Link>
-          <Link>
+          <Link to={"/signIn"}>
             <li className='text-slate-700 hover:underline font-bold'>로그인</li>
           </Link>
         </ul>
