@@ -36,3 +36,11 @@ export const signIn = async (req, res, next) => {
         next(error);
     }
 }
+
+export const google = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email : req.body.email });
+    } catch (error) {
+        next(error);
+    }
+}
