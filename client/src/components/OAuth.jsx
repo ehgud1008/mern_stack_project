@@ -25,6 +25,7 @@ export default function OAuth() {
                     avatar : result.user.photoURL,
                 }),
             });
+            alert(response);
             const data = await response.json();
             dispatch(signInSuccess(data));
         } catch (error) {
