@@ -5,7 +5,7 @@ import userRouter from './routes/user.js';
 import authRouter from './routes/auth.js';
 
 dotenv.config();
-mongoose.connect('mongodb+srv://admin:1q2w3e4r!Q%40W%23E%24R@project.diuxmwz.mongodb.net/', { dbName: 'myfolio' })
+mongoose.connect(process.env.MONGODB_URI, { dbName: 'myfolio' })
     .then(() =>{ console.log("Connected to DB");})
     .catch((error)=> {console.log(error);});
 const app = express()
