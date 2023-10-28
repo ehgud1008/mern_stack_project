@@ -39,13 +39,11 @@ export const signIn = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
     try {
-        console.log("email >> " + req.body.email);
         const user = await User.findOne({ email : req.body.email });
         if(user){
             const token = jwt.sign({ id : user._id }, process.env.JWT_SECRET)    //_id로 unique 한 토큰값 지정
             const {password : pass, ...rest} = user._doc;  //
             res.cookie('access_token', token, { httpOnly : true } ).status(200).json(rest);
-            alert(user);
         }else{
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
@@ -55,7 +53,6 @@ export const google = async (req, res, next) => {
                 password : hashedPassword,
                 avatar : req.body.avatar
             });
-            console.log("newUser >> " + newUser);
             await newUser.save();
             const token = jwt.sign({ id : newUser._id }, process.env.JWT_SECRET)    //_id로 unique 한 토큰값 지정
             const {password : pass, ...rest} = newUser._doc;  //
