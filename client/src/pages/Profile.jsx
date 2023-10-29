@@ -3,15 +3,19 @@ import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { app } from '../firebase.js';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js';
+import { useDispatch } from 'react-redux';
 
 const Profile = () => {
-  const currentUser = useSelector((state) => state.user.currentUser);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
 
   const [file, setFile] = useState(undefined);
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState( {} );
+  const [updateSucess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
   console.log(filePercent);
   
   //firebase storage
@@ -49,10 +53,38 @@ const Profile = () => {
     );
 
   }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id] : e.target.value });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/updateUser/${currentUser._id}`, {
+        method : 'POST',
+        headers : {
+          'Content-Type' : 'application/json',
+        },
+        body : JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>프로필</h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={ handleSubmit } className='flex flex-col gap-4'>
         <input type="file" 
               onChange={ (e) => setFile(e.target.files[0]) } ref={fileRef} hidden accept="image/*" />
         <img src={ formData.avatar || currentUser.avatar } onClick={ () => fileRef.current.click()}
@@ -71,16 +103,19 @@ const Profile = () => {
             )
           }
         </p>
-        <input type='text' id="userName" placeholder='이름' className='bolder p-3 rounded-lg'/>
-        <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg'/>
+        <input type='text' id="userName" placeholder='이름' className='bolder p-3 rounded-lg' defaultValue={currentUser.userName} onChange = {handleChange}/>
+        <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
         <input type='password' id="password" placeholder='비밀번호' className='bolder p-3 rounded-lg'/>
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">수정하기</button>
+        <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">{ loading ? 'Loading...' : '수정하기'}</button>
 
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-500 cursor-pointer">회원 탈퇴</span>
         <span className="text-red-500 cursor-pointer">로그 아웃</span>
       </div>
+
+      <p className='text-red-500 mt-5'>{ error ? error : ''}</p>
+      <p className='text-blue-500 mt-5'>{updateSucess ? '업데이트 성공' : ''}</p>
     </div>
   )
 }

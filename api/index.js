@@ -3,6 +3,7 @@ import mongoose, { mongo } from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.js';
 import authRouter from './routes/auth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 mongoose.connect(process.env.MONGODB_URI, { dbName: 'myfolio' })
@@ -19,6 +20,8 @@ app.listen(port, function () {
 app.get('/', (req, res, next) => {
     res.send('hello world!');
 });
+
+app.use(cookieParser());
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);

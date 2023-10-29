@@ -9,7 +9,6 @@ const SignIn = () => {
   //const [error, setError] = useState(null);
   // const [loading, setLoading] = useState(false);
   const {loading, error} = useSelector( (state) => state.user);
-  
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
 
@@ -23,6 +22,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
       //setLoading(true);
       dispatch(signInStart());
@@ -49,7 +49,7 @@ const SignIn = () => {
     } catch (error) {
       // setLoading(false);
       // setError(error.message);
-      dispatch(signInFailure(data.message));
+      dispatch(signInFailure(error.message));
     }
     
   }
