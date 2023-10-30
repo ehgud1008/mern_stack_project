@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar : {
         type : String,
-        default : "../resources/images/defaultProfile.png"
+        default : "/images/defaultProfile.png"
     },
 }, { timestamps : true});
 
