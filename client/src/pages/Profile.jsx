@@ -59,58 +59,67 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(updateUserStart());
-      const res = await fetch(`/api/user/updateUser/${currentUser._id}`, {
-        method : 'POST',
-        headers : {
-          'Content-Type' : 'application/json',
-        },
-        body : JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      if(data.success === false){
-        dispatch(updateUserFailure(data.message));
-        return;
+    var result = confirm("수정하시겠습니까??");
+    if(result){
+      try {
+        dispatch(updateUserStart());
+        const res = await fetch(`/api/user/updateUser/${currentUser._id}`, {
+          method : 'POST',
+          headers : {
+            'Content-Type' : 'application/json',
+          },
+          body : JSON.stringify(formData),
+        });
+  
+        const data = await res.json();
+        if(data.success === false){
+          dispatch(updateUserFailure(data.message));
+          return;
+        }
+  
+        dispatch(updateUserSuccess(data));
+        setUpdateSuccess(true);
+      } catch (error) {
+        dispatch(updateUserFailure(error.message));
       }
-
-      dispatch(updateUserSuccess(data));
-      setUpdateSuccess(true);
-    } catch (error) {
-      dispatch(updateUserFailure(error.message));
     }
   }
 
   const handleDeleteUser = async () => {
-    try {
-      dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/deleteUser/${currentUser._id}`,{
-        method : 'DELETE',
-      });
-      const data = await res.json();
-      if(data.success === false){
-        dispatch(deleteUserFailure(data.message));
-        return;
+    var result = confirm("회원탈퇴 하시겠습니까??");
+    if(result){
+      try {
+        dispatch(deleteUserStart());
+        const res = await fetch(`/api/user/deleteUser/${currentUser._id}`,{
+          method : 'DELETE',
+        });
+        const data = await res.json();
+        if(data.success === false){
+          dispatch(deleteUserFailure(data.message));
+          return;
+        }
+        dispatch(deleteUserSuccess(data));
+      } catch (error) {
+        dispatch(deleteUserFailure(error.message));
       }
-      dispatch(deleteUserSuccess(data));
-    } catch (error) {
-      dispatch(deleteUserFailure(error.message));
     }
   }
 
   const handleSignout = async () => {
-    try {
-      dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signOut');
-      const data = await res.json();
-      if (data.success === false) {
+    var result = confirm("로그아웃 하시겠습니까??");
+    if(result){
+      try {
+        dispatch(signOutUserStart());
+        const res = await fetch('/api/auth/signOut');
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(deleteUserFailure(data.message));
+          return;
+        }
+        dispatch(deleteUserSuccess(data));
+      } catch (error) {
         dispatch(deleteUserFailure(data.message));
-        return;
       }
-      dispatch(deleteUserSuccess(data));
-    } catch (error) {
-      dispatch(deleteUserFailure(data.message));
     }
   }
   return (
