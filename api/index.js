@@ -6,7 +6,7 @@ import authRouter from './routes/auth.js';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
-mongoose.connect(process.env.MONGODB_URI, { dbName: 'myfolio' })
+mongoose.connect("mongodb+srv://admin:1q2w3e4r!Q%40W%23E%24R@project.diuxmwz.mongodb.net/", { dbName: 'myfolio' })
     .then(() =>{ console.log("Connected to DB");})
     .catch((error)=> {console.log(error);});
 const app = express()
@@ -25,6 +25,8 @@ app.use(cookieParser());
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+
+
 app.use((error, req, res, next) => {
     const statusCode = error.statusCode || 500;
     const message = error.message || "Server Error";

@@ -1,47 +1,52 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import {body, validation} from 'express-validator';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const [errMsg, setErrMsg] = useState(false);
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id] : e.target.value,
-
     });
+    console.log(formData.userName);
+    if(formData.userName < 9) {
+      setErrMsg(true);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setLoading(true);
-    //현재 client는 5173 포트이기 때문에 3000으로 보내줘야함
-    //vite.config.js 에서 /api에 대해 proxy 설정
-    const res = await fetch('/api/auth/signUp', {
-      method : 'POST',
-      headers : {
-        'Content-Type' : 'application/json',
-      },
-      body : JSON.stringify(formData),
-    }); 
-    const data = await res.json();
-    if(data.success === false){
-      setError(data.message);
+      //현재 client는 5173 포트이기 때문에 3000으로 보내줘야함
+      //vite.config.js 에서 /api에 대해 proxy 설정
+      const res = await fetch('/api/auth/validationCheck', {
+        method : 'POST',
+        headers : {
+          'Content-Type' : 'application/json',
+        },
+        body : JSON.stringify(formData),
+      }); 
+      const data = await res.json();
+      if(data.success === false){
+        setError(data.message);
+        setLoading(false);
+        return;
+      }
       setLoading(false);
-      return;
-    }
-    setLoading(false);
-    setError(null);
-    navigate('/signIn');
-    } catch (error) {
-      setLoading(false);
-      setError(error.message);
-    }
+      setError(null);
+      navigate('/signIn');
+      } catch (error) {
+        setLoading(false);
+        setError(error.message);
+      }
     
   }
   return (
@@ -49,6 +54,7 @@ const SignUp = () => {
       <h1 className='text-3xl text-center font-semibold my-7'>회원가입</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input type='text' placeholder='이름' className='bolder p-3 rounded-lg' id='userName' onChange={handleChange}/>
+        <p>{ setErrMsg ? '이름은 8~15자 이내로 압력해주세요' : ''} </p>
         <input type='text' placeholder='이메일' className='bolder p-3 rounded-lg' id='email' onChange={handleChange}/>
         <input type='password' placeholder='비밀번호' className='bolder p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button 

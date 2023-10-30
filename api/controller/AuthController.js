@@ -62,3 +62,23 @@ export const google = async (req, res, next) => {
         next(error);
     }
 }
+
+
+export const validationCheck = (req, res, next) => {
+    alert(req.body.userName);
+    if(req.body.userName < 8 && req.body.userName > 20){
+        console.log("아이디 길이");
+        errorHandler(500, error.message + '아이디는 8~15자 이내로 만들어주세요');
+        return;
+    }
+    if(req.body.email > 30){
+        console.log("이메일 길이");
+        errorHandler(500, error.message + '이메일는 30자 이내로 만들어주세요');
+        return;
+    }
+    if(req.body.password < 8 && req.body.password > 20){
+        console.log("비밀번호 길이");
+        errorHandler(500, error.message + '비밀번호 8~20자 이내로 만들어주세요');
+        return;
+    }
+}
