@@ -85,10 +85,10 @@ const Profile = () => {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/deleteUser/${currentUser.id}`,{
+      const res = await fetch(`/api/user/deleteUser/${currentUser._id}`,{
         method : 'DELETE',
       });
-      
+      const data = await res.json();
       if(data.success === false){
         dispatch(deleteUserFailure(data.message));
         return;
@@ -101,18 +101,16 @@ const Profile = () => {
 
   const handleSignout = async () => {
     try {
+      dispatch(signOutUserStart());
       const res = await fetch('/api/auth/signOut');
       const data = await res.json();
-
-      dispatch(signOutUserStart());
-
-      if(data.success === false){
-        dispatch(signOutUserFailure(data.message));
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
       }
-
-      signOutUserSuccess(data);
+      dispatch(deleteUserSuccess(data));
     } catch (error) {
-      dispatch(signOutUserFailure(error.message));
+      dispatch(deleteUserFailure(data.message));
     }
   }
   return (
@@ -145,7 +143,7 @@ const Profile = () => {
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-500 cursor-pointer" onClick={handleDeleteUser}>회원 탈퇴</span>
-        <span className="text-red-500 cursor-pointer" onClick={{handleSignout}}>로그 아웃</span>
+        <span className="text-red-500 cursor-pointer" onClick={handleSignout}>로그 아웃</span>
       </div>
 
       <p className='text-red-500 mt-5'>{ error ? error : ''}</p>

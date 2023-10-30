@@ -82,3 +82,12 @@ export const validationCheck = (req, res, next) => {
         return;
     }
 }
+
+export const signOut = (req, res, next) => {
+    try {
+        res.clearCookie('access_token');
+        res.status(200).json('로그아웃');
+    } catch (error) {
+        next(error);
+    }
+}
