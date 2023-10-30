@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { app } from '../firebase.js';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js';
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice.js';
 import { useDispatch } from 'react-redux';
 
 const Profile = () => {
@@ -81,6 +81,40 @@ const Profile = () => {
       dispatch(updateUserFailure(error.message));
     }
   }
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/deleteUser/${currentUser.id}`,{
+        method : 'DELETE',
+      });
+      
+      if(data.success === false){
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  }
+
+  const handleSignout = async () => {
+    try {
+      const res = await fetch('/api/auth/signOut');
+      const data = await res.json();
+
+      dispatch(signOutUserStart());
+
+      if(data.success === false){
+        dispatch(signOutUserFailure(data.message));
+      }
+
+      signOutUserSuccess(data);
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>프로필</h1>
@@ -110,8 +144,8 @@ const Profile = () => {
 
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-500 cursor-pointer">회원 탈퇴</span>
-        <span className="text-red-500 cursor-pointer">로그 아웃</span>
+        <span className="text-red-500 cursor-pointer" onClick={handleDeleteUser}>회원 탈퇴</span>
+        <span className="text-red-500 cursor-pointer" onClick={{handleSignout}}>로그 아웃</span>
       </div>
 
       <p className='text-red-500 mt-5'>{ error ? error : ''}</p>

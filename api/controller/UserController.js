@@ -32,3 +32,26 @@ export const userUpdate = async (req, res, next) => {
         next(error);
     }
 }
+
+export const deleteUser = async (req, res, next) => {
+    if(req.user.id !== req.params.id) return next(errorHandler(401, '본인계정만 삭제 할 수 있습니다.'));
+
+    try {
+      const deleteUser = await User.findByIdAndDelete(req.params.id);
+      res.clearCookie('access_token');
+      res.status(200).json('삭제 되었습니다.');
+
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const signOut = (req, res, next) => {
+    try {
+        res.clearCookie('access_token');
+        res.status(200).json('로그아웃');
+    } catch (error) {
+        next(error);
+    }
+}
