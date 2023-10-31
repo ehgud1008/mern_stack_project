@@ -148,7 +148,7 @@ const Profile = () => {
         <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
         <input type='password' id="password" placeholder='비밀번호' className='bolder p-3 rounded-lg'/>
         <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">{ loading ? 'Loading...' : '수정하기'}</button>
-
+        <button onClick='' className='bg-greeni-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>리스팅 생성</button>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-500 cursor-pointer" onClick={handleDeleteUser}>회원 탈퇴</span>
