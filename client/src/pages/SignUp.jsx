@@ -89,11 +89,11 @@ const SignUp = () => {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>회원가입</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <input type='text' placeholder='이름' className='bolder p-3 rounded-lg' id='userName' onChange={handleChange}/>
+        <input type='text' placeholder='이름' maxLength='15' minLength='2' className='bolder p-3 rounded-lg' id='userName' onChange={handleChange}/>
         <p className='text-red-500 text-sm'>{ validUserNameCheck ? '이름은 2~15자 이내로 압력해주세요' : ''} </p>
-        <input type='text' placeholder='이메일' className='bolder p-3 rounded-lg' id='email' onChange={handleChange}/>
+        <input type='text' placeholder='이메일' maxLength='30' minLength='5' className='bolder p-3 rounded-lg' id='email' onChange={handleChange}/>
         <p className='text-red-500 text-sm'>{ validEmailCheck ? '이메일 형식을 확인해주세요.' : ''} </p>
-        <input type='password' placeholder='비밀번호' className='bolder p-3 rounded-lg' id='password' onChange={handleChange}/>
+        <input type='password' placeholder='비밀번호' maxLength='15' minLength='2' className='bolder p-3 rounded-lg' id='password' onChange={handleChange}/>
         <p className='text-red-500 text-sm'>{ validPasswordCheck ? '비밀번호는 2~15자 이내로 압력해주세요' : ''} </p>
         <button 
           disabled={loading}

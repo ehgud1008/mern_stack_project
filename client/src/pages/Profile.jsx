@@ -145,7 +145,7 @@ const Profile = () => {
             )
           }
         </p>
-        <input type='text' id="userName" placeholder='이름' className='bolder p-3 rounded-lg' defaultValue={currentUser.userName} onChange = {handleChange}/>
+        <input type='text' id="userName" placeholder='이름' maxLength='15' minLength='2' className='bolder p-3 rounded-lg' defaultValue={currentUser.userName} onChange = {handleChange}/>
         <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
         <input type='password' id="password" placeholder='비밀번호' className='bolder p-3 rounded-lg'/>
         <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">{ loading ? 'Loading...' : '수정하기'}</button>
