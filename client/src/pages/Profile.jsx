@@ -5,6 +5,7 @@ import { app } from '../firebase.js';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice.js';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -148,6 +149,9 @@ const Profile = () => {
         <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
         <input type='password' id="password" placeholder='비밀번호' className='bolder p-3 rounded-lg'/>
         <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">{ loading ? 'Loading...' : '수정하기'}</button>
+        <Link to={'/createListing'}  className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'>
+          리스팅 생성
+        </Link>
         <button onClick='' className='bg-greeni-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>리스팅 생성</button>
       </form>
       <div className="flex justify-between mt-5">
