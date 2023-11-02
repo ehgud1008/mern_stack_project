@@ -7,18 +7,29 @@ export default function CreateListing () {
     const [formData, setFormData] = useState({
         imageUrls : [],
     })
+    const [uploadError, setUploadError] = useState(false);
+
     console.log(files);
 
     const handleImageUpload = (e) => {
-        if(files.length > 0 && files.length < 7){
+        if(files.length > 0 && files.length + formData.imageUrls.length < 7){
             const promise = [];
 
             for(let i = 0; i < files.length; i ++ ){
                 promise.push(storeImage(files[i]));
             }
             Promise.all(promise).then( (urls) => {
-                setFormData( {...formData, imageUrls : formData.imageUrls.concat(urls)} );
+                setFormData( {
+                    ...formData, 
+                    imageUrls : formData.imageUrls.concat(urls),
+                });
+                console.log("!!! >>> " + formData.imageUrls);
+                setUploadError(false);
+            }).catch((error) =>{
+                setUploadError('이미지는 2MB 이하 사이즈로 업로드 해주세요.')
             });
+        }else{
+            setUploadError('이미지는 최대 6장까지 업로드 가능합니다.');
         }
     }
 
@@ -102,9 +113,18 @@ export default function CreateListing () {
                     <div className='flex gap-4'>
                         <input onChange={ (e) => { setFiles(e.target.files) }} className='p-3 border border-gray-300 rounded w-full' type='file' id='images' accept='image/*' multiple />
                         <button onClick={ handleImageUpload } type='button' className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80' >
-                            등록
+                            업로드
                         </button>
                     </div>
+                    {
+                        formData.imageUrls.length > 0 && formData.imageUrls.map( (url) => {
+                            console.log(url);
+                            // <img src={url} alt="listing image" className='w-40 h-40 object-cover rounded-lg' />
+                            <img src="https://firebasestorage.googleapis.com/v0/b/mernproject-a786e.appspot.com/o/1698935808268%EB%AC%B4%EC%B1%84.jpg?alt=media&amp;token=fd6c8de0-f60b-4490-adeb-e9c810617f87" alt="listing image" class="w-40 h-40 object-cover rounded-lg"></img>
+                        })
+                    }
+                    {/* <img src='https://firebasestorage.googleapis.com/v0/b/mernproject-a786e.appspot.com/o/1698935808268%EB%AC%B4%EC%B1%84.jpg?alt=media&token=fd6c8de0-f60b-4490-adeb-e9c810617f87' alt="listing image" className='w-40 h-40 object-cover rounded-lg' /> */}
+                    <p className='text-red-500 text-sm'>{uploadError && uploadError}</p>
                     <button className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
                         등록
                     </button>
