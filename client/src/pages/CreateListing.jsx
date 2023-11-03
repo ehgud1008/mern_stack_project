@@ -116,13 +116,9 @@ export default function CreateListing () {
                             업로드
                         </button>
                     </div>
-                    {
-                        formData.imageUrls.length > 0 && formData.imageUrls.map( (url) => {
-                            console.log(url);
-                            // <img src={url} alt="listing image" className='w-40 h-40 object-cover rounded-lg' />
-                            <img src="https://firebasestorage.googleapis.com/v0/b/mernproject-a786e.appspot.com/o/1698935808268%EB%AC%B4%EC%B1%84.jpg?alt=media&amp;token=fd6c8de0-f60b-4490-adeb-e9c810617f87" alt="listing image" class="w-40 h-40 object-cover rounded-lg"></img>
-                        })
-                    }
+                    {formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
+                            <img key={index} src={url} alt="listing image" class="w-40 h-40 object-cover rounded-lg"></img>
+                    ))}
                     {/* <img src='https://firebasestorage.googleapis.com/v0/b/mernproject-a786e.appspot.com/o/1698935808268%EB%AC%B4%EC%B1%84.jpg?alt=media&token=fd6c8de0-f60b-4490-adeb-e9c810617f87' alt="listing image" className='w-40 h-40 object-cover rounded-lg' /> */}
                     <p className='text-red-500 text-sm'>{uploadError && uploadError}</p>
                     <button className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
