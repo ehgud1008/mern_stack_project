@@ -8,11 +8,14 @@ export default function CreateListing () {
         imageUrls : [],
     })
     const [uploadError, setUploadError] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     console.log(files);
 
     const handleImageUpload = (e) => {
         if(files.length > 0 && files.length + formData.imageUrls.length < 7){
+            setUploading(true);
+            setUploadError(false);
             const promise = [];
 
             for(let i = 0; i < files.length; i ++ ){
@@ -25,11 +28,14 @@ export default function CreateListing () {
                 });
                 console.log("!!! >>> " + formData.imageUrls);
                 setUploadError(false);
+                setUploading(false);
             }).catch((error) =>{
                 setUploadError('이미지는 2MB 이하 사이즈로 업로드 해주세요.')
+                setUploading(false);
             });
         }else{
             setUploadError('이미지는 최대 6장까지 업로드 가능합니다.');
+            setUploading(false);
         }
     }
 
@@ -56,6 +62,15 @@ export default function CreateListing () {
             )
         });
     }
+
+    const handleDeleteImage = (index) => {
+        setFormData({
+            ...formData,
+            imageUrls : formData.imageUrls.filter( (_, i) => i !== index),
+        });
+    }
+
+
     return (
         <main className="p-3 max-w-4xl mx-auto">
             <h1 className='text-3xl font-semibold text-center my-7'>리스팅 생성</h1>
@@ -112,12 +127,15 @@ export default function CreateListing () {
                     </p>
                     <div className='flex gap-4'>
                         <input onChange={ (e) => { setFiles(e.target.files) }} className='p-3 border border-gray-300 rounded w-full' type='file' id='images' accept='image/*' multiple />
-                        <button onClick={ handleImageUpload } type='button' className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80' >
-                            업로드
+                        <button disabled={uploading} onClick={ handleImageUpload } type='button' className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80' >
+                            {uploading ? '업로드 중입니다.' : '업로드'}
                         </button>
                     </div>
                     {formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
-                        <img key={index} src={url} alt="listing image" class="w-40 h-40 object-cover rounded-lg"></img>
+                        <div key={index} className='flex justify-between p-3 border items-center'>
+                            <img src={url} alt="listing image" class="w-40 h-40 object-cover rounded-lg"></img>
+                            <button type="button" onClick={ () => handleDeleteImage(index)} className='p-3 text-red-600 rounded-lg uppercase hover:opacity-75'>삭제</button>
+                        </div>
                     ))}
                     <p className='text-red-500 text-sm'>{uploadError && uploadError}</p>
                     <button className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
