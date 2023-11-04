@@ -6,6 +6,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice.js';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import MyListing from './MyListing.jsx';
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -16,6 +17,9 @@ const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState( {} );
   const [updateSucess, setUpdateSuccess] = useState(false);
+  const [showMyListing, setShowMyListing] = useState(false);
+  const [showMyListingError, setShowMyListingError] = useState(false);
+
   const dispatch = useDispatch();
   console.log(filePercent);
   
@@ -123,6 +127,22 @@ const Profile = () => {
       }
     }
   }
+
+  const handleShowListing = async () => {
+    try {
+      setShowMyListingError(false);
+      const res = await fetch(`/api/listing/getMyListing/${currentUser._id}`);
+      const data = res.json();
+      
+      if(data.success === false) {
+        setShowMyListingError(true);
+        return;
+      }
+      console.log(data);
+    } catch (error) {
+      setShowMyListingError(true);
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>프로필</h1>
@@ -146,23 +166,25 @@ const Profile = () => {
           }
         </p>
         <input type='text' id="userName" placeholder='이름' maxLength='15' minLength='2' className='bolder p-3 rounded-lg' defaultValue={currentUser.userName} onChange = {handleChange}/>
-        <input type='text' id="email" placeholder='이메일' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
+        <input type='text' id="email" placeholder='이메일' minLength='1' className='bolder p-3 rounded-lg' defaultValue={currentUser.email} onChange = {handleChange}/>
         <input type='password' id="password" placeholder='비밀번호' className='bolder p-3 rounded-lg'/>
         <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">{ loading ? 'Loading...' : '수정하기'}</button>
         <Link to={'/createListing'}  className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'>
           리스팅 생성
         </Link>
-        <button onClick='' className='bg-greeni-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>리스팅 생성</button>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-500 cursor-pointer" onClick={handleDeleteUser}>회원 탈퇴</span>
         <span className="text-red-500 cursor-pointer" onClick={handleSignout}>로그 아웃</span>
       </div>
-
       <p className='text-red-500 mt-5'>{ error ? error : ''}</p>
       <p className='text-blue-500 mt-5'>{updateSucess ? '업데이트 성공' : ''}</p>
+      <button onClick={handleShowListing} className='text-green-600 w-full'>내 리스팅 보기</button>
+      <p className='text-red-600 mt-5'>{showMyListingError ? '에러': ''}</p>
+      {/* { showMyListingError ? <p className='text-red-600 mt-5'>내 리스팅 불러오기 실패 </p>: <MyListing></MyListing> } */}
     </div>
   )
+
 }
 
 export default Profile
