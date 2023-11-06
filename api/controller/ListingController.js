@@ -10,7 +10,7 @@ export const createListing = async (req, res, next) => {
 }
 
 export const getMyListing = async (req, res, next) => {
-    if(req.user.id !== req.params.id){
+    if(req.user.id === req.params.id){
         try {
             const listing = await Listing.find( {userRef : req.params.id} );
             res.status(201).json(listing);

@@ -2,23 +2,22 @@ import React, { useState } from 'react'
 
 const MyListing = () => {
     const [listing, setListing] = useState({});
-    const [formData, setFormData] = useState({});
+    const { currentUser, loading, error } = useSelector((state) => state.user);
 
-    const getMyListing = async () => {
-        const res = await fetch('/api/listing/getMyListing', {
-            method : 'GET',
-            headers : {
-                'Content-Type' : 'application/json',
-            },
-            body : JSON.stringify(formData),
-        });
-
-        const data = await res.json();
-
-        if(data.success === false){}
-
-        setFormData({ ...formData, [e.target.id] : e.target.value });
-    }
+    const handleShowListing = async () => {
+        try {
+          setShowMyListingError(false);
+          const res = await fetch(`/api/listing/getMyListing/${currentUser._id}`);
+          const data = res.json();
+          
+          if(data.success === false) {
+            setShowMyListingError(true);
+            return;
+          }
+        } catch (error) {
+          setShowMyListingError(true);
+        }
+      }
     
   return (
     <div>
