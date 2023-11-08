@@ -19,3 +19,13 @@ export const getMyListing = async (req, res, next) => {
         }
     }
 }
+
+export const deleteMyListing = async (req, res, next) => {
+    try {
+        console.log(req.params.id);
+        await Listing.findByIdAndDelete(req.params.id);
+        res.status(200).json('리스팅 삭제 완료!');
+    } catch (error) {
+        next(error);
+    }
+}

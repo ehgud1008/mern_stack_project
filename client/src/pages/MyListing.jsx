@@ -39,11 +39,15 @@ const MyListing = () => {
 
         const data = res.json();
         if(data.success === false){
+          console.log(data.message);
           return;
         }
 
+        setMyListing( (prev) => 
+          prev.filter((listing) => listing._id !== _id)
+        );
       } catch (error) {
-        
+        alert(error.message);
       }
     }
   }
