@@ -130,26 +130,6 @@ const Profile = () => {
     }
   }
 
-  const handleShowListing = async (check) => {
-    try {
-      setMyListingError(false);
-      const res = await fetch(`/api/listing/getMyListing/${currentUser._id}`);
-      const data = await res.json();
-      
-      if(data.success === false) {
-        setMyListingError(true);
-        return;
-      }
-      setMyListing(data);
-      setShowMyListing(true);
-    } catch (error) {
-      setMyListingError(true);
-    }
-  }
-
-  const handleHideListing = () => {
-    setShowMyListing(false);
-  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>프로필</h1>

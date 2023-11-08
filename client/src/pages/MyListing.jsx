@@ -52,9 +52,6 @@ const MyListing = () => {
     }
   }
 
-  const handleEditListing = (_id) => {
-
-  }
   return (
     <div>
       {showMyListing ? (
@@ -77,7 +74,9 @@ const MyListing = () => {
                   </Link>
                   <div className='flex flex-col item-center p-2'>
                     <button onClick={() =>handleDeleteListing(listing._id)} className='text-red-600 uppercase p-1'>삭제</button>
-                    <button onClick={() => handleEditListing(listing._id)} className='text-blue-600 uppercase'>수정</button>
+                    <Link to={`/updateListing/${listing._id}`}>
+                      <button className='text-blue-600 uppercase'>수정</button>
+                    </Link>
                   </div>
                 </div>
               ))}
