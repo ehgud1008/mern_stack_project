@@ -161,7 +161,7 @@ export default function CreateListing () {
                         <div className='flex gap-2'>
                             <input type='checkbox' id='rent' className='w-5' 
                                 onChange={handleChange} checked={formData.type === 'rent'}/>
-                            <span>렌트</span>
+                            <span>임대</span>
                         </div>
                         <div className='flex gap-2'>
                             <input type='checkbox' id='parking' className='w-5'
