@@ -35,11 +35,25 @@ export const userUpdate = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
     if (req.user.id !== req.params.id)
-        return next(errorHandler(401, 'You can only delete your own account!'));
+        return next(errorHandler(401, '본인 계정만 삭제가능합니다.'));
     try {
         await User.findByIdAndDelete(req.params.id);
         res.clearCookie('access_token');
-        res.status(200).json('User has been deleted!');
+        res.status(200).json('회원탈퇴 되었습니다!');
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if(!user) return next(errorHandler(404, '유저를 찾을 수 없습니다.'))
+
+        const { password: pass, ...rest} = user._doc;
+
+        res.status(200).json(rest);
     } catch (error) {
         next(error);
     }
