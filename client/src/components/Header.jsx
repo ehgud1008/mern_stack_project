@@ -1,10 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {FaSearch} from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const navigate = useNavigate();
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    //현재 페이지의 쿼리 스트링은 window.location.search 로 불러올 수 있음.
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('searchKeyword', searchKeyword);
+
+    const searchQuery = urlParams.toString();
+    console.log(searchQuery);
+    navigate(`/search?${searchQuery}`);
+  }
+
+  useEffect( () => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const searchKeyword = urlParams.get('searchKeyword');
+    if(searchKeyword) {
+      setSearchKeyword(searchKeyword);
+    }
+  }, [location.search])
   return (
     <header className='bg-slate-200 shadow-md'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -14,9 +37,12 @@ const Header = () => {
               <span className='text-slate-700'>Folio</span>
           </h1>
         </Link>
-        <form className='bg-slate-100 p-3 rounded-lg flex items-center'>
-          <input type="text" className="bg-transparent focus:outline-none w-24 sm:w-64" placeholder='Search....'/>
-          <FaSearch className="text-slate-600"/>
+        <form onSubmit={handleSearchSubmit} className='bg-slate-100 p-3 rounded-lg flex items-center'>
+          <input type="text" className="bg-transparent focus:outline-none w-24 sm:w-64" placeholder='Search....'
+                onChange={(e) => setSearchKeyword(e.target.value)} value={searchKeyword}/>
+              <button>
+                <FaSearch className="text-slate-600"/>
+              </button>
         </form>
         <ul className='flex gap-4'>
           <Link to={"/"}>
