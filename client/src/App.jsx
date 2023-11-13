@@ -11,6 +11,7 @@ import CreateListing from './pages/CreateListing';
 import MyListing from './pages/MyListing';
 import UpdateListing from './pages/UpdateListing';
 import Listing from './pages/Listing';
+import SearchListing from './pages/SearchListing';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path='/signUp' element={<SignUp />} />
         <Route path='/about' element={<About />} />
         <Route path='/listing/:_id' element={<Listing />} />
+        <Route path='/searchListing' element={ <SearchListing />} />
         <Route element={<Private />} >
           <Route path='/profile' element={<Profile />} />
           <Route path='/createListing' element={<CreateListing />} />
