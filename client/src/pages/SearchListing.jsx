@@ -1,5 +1,7 @@
+import { list } from 'firebase/storage';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import ListingCard from '../components/ListingCard';
 
 const SearchListing = () => {
     const navigate = useNavigate();
@@ -15,7 +17,7 @@ const SearchListing = () => {
     } );
 
     const [loading, setLoading] = useState(false);
-    const [listins, setListings] = useState([]);
+    const [listings, setListings] = useState([]);
 
     useEffect( () => {
         const urlParams = new URLSearchParams(location.search);
@@ -48,7 +50,6 @@ const SearchListing = () => {
             const res = await fetch(`/api/listing/getSearchListings?${searchQuery}`);
             const data = await res.json();
 
-            console.log(data);
             setListings(data);
             setLoading(false);
         }
@@ -153,8 +154,19 @@ const SearchListing = () => {
                 <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>검색</button>
             </form>
         </div>
-        <div className=''>
-            <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 m'>검색 결과</h1>
+        <div className='flex-1'>
+            <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>검색 결과</h1>
+            <div className='p-7 flex flex-wrap gap-4'>
+                {!loading && listings.length === 0 && (
+                    <p className='text-xl text-slate-700'>검색결과가 없습니다.</p>
+                )}
+                {loading && (
+                    <p className='text-xl text-slate-700 text-center w-full'>로딩 중...</p>
+                )}
+                {!loading && listings && listings.map( (listing) => (
+                    <ListingCard key={listing._id} listing={listing}/>
+                ))}
+            </div>
         </div>
     </div>
   )

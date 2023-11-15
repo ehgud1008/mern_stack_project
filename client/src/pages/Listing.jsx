@@ -87,7 +87,7 @@ const Listing = () => {
                         </p>
                         {listing.offer && (
                             <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                                {listing.discountPrice}￦ OFF
+                                할인 {(listing.regularPrice -+ listing.discountPrice).toLocaleString('ko-KR')}￦ 
                             </p>
                         )}
                     </div>

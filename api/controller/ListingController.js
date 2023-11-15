@@ -63,7 +63,6 @@ export const getListing = async (req, res, next) => {
 
 
 export const getSearchListings = async (req, res, next) => {
-    console.log("ASDFASDF");
     try {
         const limit = parseInt(req.query.limit) || 9;
         const startIndex = parseInt(req.query.startIndex) || 0;
