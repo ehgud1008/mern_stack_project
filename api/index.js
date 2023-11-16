@@ -22,10 +22,6 @@ app.listen(port, function () {
     console.log('server on! ' + port);
 });
 
-app.get('/', (req, res, next) => {
-    res.send('hello world!');
-});
-
 app.use(cookieParser());
 
 app.use('/api/user', userRouter);
